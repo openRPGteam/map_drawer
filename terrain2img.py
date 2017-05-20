@@ -1,17 +1,12 @@
 from PIL import Image
+from convert_dict import CONVERT_DICT_SPRITES as CONVERT_DICT
+from convert_dict import CONVERT_DICT_BINARY_REVERSE as BINARY
 
-CONVERT_DICT = {
-    "WATER" : "sprites/water.png",
-    "GRASS": "sprites/grass.png",
-    "SAND" : "sprites/sand.png",
-    "MOUNTAIN" : "sprites/mountain.png",
-    "SNOW" : 'sprites/snow.png'
-}
 
 if __name__ == '__main__':
     import sys, glob
-    if len(sys.argv) != 3:
-        print('2 argument expected, {} provided'.format(len(sys.argv) - 1))
+    if len(sys.argv) != 4:
+        print('3 argument expected (text file, output filename, mode (t/b), {} provided'.format(len(sys.argv) - 1))
     elif len(glob.glob(sys.argv[1])) == 0:
         print('file doesn`t exist')
     else:
@@ -24,10 +19,11 @@ if __name__ == '__main__':
                 read = False
             else:
                 columns.append(row.split(' '))
-        img = Image.new("RGB", (50 * len(columns), 50 * len(columns[0])))
+        img = Image.new("RGB", (50 * (len(columns[0]) - 1), 50 * len(columns)))
         for y0 in range(len(columns)):
             for x0 in range(len(columns[0]) - 1):
-                shard = Image.open(CONVERT_DICT[columns[x0][y0]])
+                terr_type = columns[y0][x0] if sys.argv[3] == "t" else BINARY[columns[y0][x0]]
+                shard = Image.open(CONVERT_DICT[terr_type])
                 img.paste(shard, (x0 * 50, y0 * 50))
                 shard.close()
         img.save(sys.argv[2], "PNG")
