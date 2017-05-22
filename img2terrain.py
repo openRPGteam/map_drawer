@@ -47,7 +47,8 @@ if __name__ == '__main__':
             for row in result:
                 rowstr = ""
                 for elem in row:
-                    rowstr += elem + ' '
+##fix without space
+                    rowstr += elem + ''
                 print(rowstr)
             img.close()
         else:
